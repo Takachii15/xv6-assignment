@@ -5,6 +5,6 @@
 
 # Notes for Report
 
-- For code diff, please refer to code_diff.md
-- For usertest Screenshot, please refer to usertest directory
+- For code diff, please refer to [code_diff.md](./diff_report.md)
+- For usertest Screenshot, please refer to [usertest](./usertest) directory
 
