@@ -56,10 +56,10 @@ index 6483959..dc8d53b 100644
 
 ## code diff
 in order to add new date syscall there will be some file that are needed to edit, 
-- Makefile
+- Makefile, to enable print syscall 
 - user.h, to add new date variable
-- usys.S
-- syscall.h, to define SYS_date
+- usys.S, to list syscall into the kernel
+- syscall.h, to define syscall names to syscall number
 - syscall.c
   - add new extern int 
   - define the date syscall in the array
