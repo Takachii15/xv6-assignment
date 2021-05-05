@@ -1,11 +1,6 @@
 # Task 1 (SYSCALL Tracing)
 
-in this file i will show both the git diff of the edited file and the result image of each task
-
-## Result Image
-
-![Syscall Tracing](./usertest/sycall_tracing/syscalltrace01.png)
-![Syscall Tracing](./usertest/sycall_tracing/syscalltrace02.png)
+in this file i will show the git diff of the edited file of each task
 
 ## code diff
 in this task i only modified syscall.c and Makefile to enable xv6 to print syscall trace. 
@@ -50,11 +45,8 @@ index 6483959..dc8d53b 100644
 
 # Task 2 (adding new date SYSCALL) 
 
-## Result Image
-
-![Date syscall](./usertest/date_syscall/date.png)
-
 ## code diff
+
 in order to add new date syscall there will be some file that are needed to edit, 
 - Makefile, to enable print syscall 
 - user.h, to add new date variable
@@ -203,10 +195,6 @@ index 98563ea..40b676e 100644
 ```
 
 # Task 3 (Information Process)
-
-## Result Image
-
-![Information Process](./usertest/process_information/process.png)
 
 ## code diff
 
