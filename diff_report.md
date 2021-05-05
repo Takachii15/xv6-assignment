@@ -1,6 +1,11 @@
 # Task 1 (SYSCALL Tracing)
 
+in this file i will show both the git diff of the edited file and the result image of each task
+
 ## Result Image
+
+![Syscall Tracing](./usertest/sycall_tracing/syscalltrace01.png)
+![Syscall Tracing](./usertest/sycall_tracing/syscalltrace02.png)
 
 ## code diff
 in this task i only modified syscall.c and Makefile to enable xv6 to print syscall trace. 
@@ -46,6 +51,8 @@ index 6483959..dc8d53b 100644
 # Task 2 (adding new date SYSCALL) 
 
 ## Result Image
+
+![Date syscall](./usertest/date_syscall/date.png)
 
 ## code diff
 in order to add new date syscall there will be some file that are needed to edit, 
@@ -195,9 +202,11 @@ index 98563ea..40b676e 100644
 +
 ```
 
-# Task 3 (Ctrl-P command)
+# Task 3 (Information Process)
 
 ## Result Image
+
+![Information Process](./usertest/process_information/process.png)
 
 ## code diff
 
@@ -257,56 +266,3 @@ index d030537..25e0211 100644
  #endif
 ```
 
-
-```diff
-tree 83addaa62370bd80d010b216baf3b557630edab5
-parent 6a45f75d2f261196cd600b62451dafcc889fd18b
-author taka <daffa.hp.dh@gmail.com> Tue May 4 22:00:33 2021 +0700
-committer taka <daffa.hp.dh@gmail.com> Tue May 4 22:00:33 2021 +0700
-
-third task, add process Information display
-
-
-diff --git a/proc.c b/proc.c
-index d030537..25e0211 100644
---- a/proc.c
-+++ b/proc.c
-@@ -149,6 +149,9 @@ allocproc(void)
-   memset(p->context, 0, sizeof *p->context);
-   p->context->eip = (uint)forkret;
- 
-+  // initialized start_ticks as ticks global variabel
-+  p->start_ticks = ticks;
-+
-   return p;
- }
- 
-@@ -563,7 +566,14 @@ procdumpP2P3P4(struct proc *p, char *state_string)
- void
- procdumpP1(struct proc *p, char *state_string)
- {
--  cprintf("TODO for Project 1, delete this line and implement procdumpP1() in proc.c to print a row\n");
-+  int temp_ticks = ticks - (p->start_ticks);
-+  if (temp_ticks < 1000)
-+    cprintf("%d\t%s\t       0.%d\t%s\t%d\t ", p->pid, p->name, temp_ticks, states[p->state], p->sz);
-+  else{
-+    int temp = temp_ticks % 1000;
-+    temp_ticks = temp_ticks / 1000;
-+    cprintf("%d\t%s\t       %d.%d\t%s\t%d\t ", p->pid, p->name, temp_ticks, temp, states[p->state], p->sz);
-+  }
-   return;
- }
- #endif
-diff --git a/proc.h b/proc.h
-index 0a0b4c5..c7ee129 100644
---- a/proc.h
-+++ b/proc.h
-@@ -49,6 +49,7 @@ struct proc {
-   struct file *ofile[NOFILE];  // Open files
-   struct inode *cwd;           // Current directory
-   char name[16];               // Process name (debugging)
-+  uint start_ticks;
- };
- 
- // Process memory is laid out contiguously, low addresses first:
-```
