@@ -6,6 +6,9 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#ifdef CS333_P3
+#include "pdx.h"
+#endif
 
 static char *states[] = {
   [UNUSED]    "unused",
@@ -189,6 +192,10 @@ userinit(void)
   acquire(&ptable.lock);
   p->state = RUNNABLE;
   release(&ptable.lock);
+  #ifdef CS333_P2
+  p->uid = DEFAULT_UID; 
+  p->gid = DEFAULT_GID;
+  #endif
 }
 
 // Grow current process's memory by n bytes.
@@ -250,6 +257,8 @@ fork(void)
   safestrcpy(np->name, curproc->name, sizeof(curproc->name));
 
   pid = np->pid;
+ np->uid = curproc->uid;
+ np->gid = curproc->gid;
 
   acquire(&ptable.lock);
   np->state = RUNNABLE;

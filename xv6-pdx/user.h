@@ -29,6 +29,15 @@ int halt(void);
 int date(struct rtcdate*);
 #endif
 
+#ifdef CS333_P2
+uint getuid(void); // UID of the current process
+uint getgid(void); // GID of the current process
+uint getppid(void); // PID of the parent process
+
+int setuid(uint); // Set uid
+int setgid(uint); // set gid
+#endif
+
 // ulib.c
 int stat(char*, struct stat*);
 char* strcpy(char*, char*);
@@ -46,3 +55,4 @@ int atoi(const char*);
 int atoo(const char*);
 int strncmp(const char*, const char*, uint);
 #endif // PDX_XV6
+
