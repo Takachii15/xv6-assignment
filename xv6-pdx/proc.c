@@ -261,7 +261,7 @@ fork(void)
 
   safestrcpy(np->name, curproc->name, sizeof(curproc->name));
 
-  pid = np->pid;
+ pid = np->pid;
  np->uid = curproc->uid;
  np->gid = curproc->gid;
 
