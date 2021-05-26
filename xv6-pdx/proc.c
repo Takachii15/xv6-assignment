@@ -5,6 +5,7 @@
 #include "mmu.h"
 #include "x86.h"
 #include "proc.h"
+#include "uproc.h"
 #include "spinlock.h"
 #ifdef CS333_P3
 #include "pdx.h"
@@ -154,6 +155,10 @@ allocproc(void)
 
   // initialized start_ticks as ticks global variabel
   p->start_ticks = ticks;
+
+  // Initialized cpu_ticks as 0 so not NULL
+  p->cpu_ticks_in = 0;
+  p->cpu_ticks_total = 0;
 
   return p;
 }
@@ -401,6 +406,7 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
+      p->cpu_ticks_in = ticks;
       swtch(&(c->scheduler), p->context);
       switchkvm();
 
@@ -441,6 +447,7 @@ sched(void)
   if(readeflags()&FL_IF)
     panic("sched interruptible");
   intena = mycpu()->intena;
+  p->cpu_ticks_total += ticks - (p->cpu_ticks_in);
   swtch(&p->context, mycpu()->scheduler);
   mycpu()->intena = intena;
 }
@@ -568,8 +575,42 @@ kill(int pid)
 void
 procdumpP2P3P4(struct proc *p, char *state_string)
 {
-  cprintf("TODO for Project 2, delete this line and implement procdumpP2P3P4() in proc.c to print a row\n");
-  return;
+  cprintf("%d\t%s\t\t%d\t%d\t%d\t",
+    p->pid,
+    p->name,
+    p->uid,
+    p->gid,
+    p->pid == 1 ? p->pid : p->parent->pid
+  );
+
+  // Elapsed ticks
+  if ((ticks - (p->start_ticks)) < 10){
+    cprintf("0.00%d\t",(ticks - (p->start_ticks)) );
+  } else if((ticks - (p->start_ticks)) < 100) {
+    cprintf("0.0%d\t",(ticks - (p->start_ticks)) );
+  } else if((ticks - (p->start_ticks)) < 1000) {
+    cprintf("0.%d\t",(ticks - (p->start_ticks)) );
+  } else{
+    cprintf("%d.%d\t",(ticks - (p->start_ticks))/1000,(ticks - (p->start_ticks))%1000);
+  }
+
+  // CPU ticks
+  if (p->cpu_ticks_total < 10){
+    cprintf("0.00%d", p->cpu_ticks_total );
+  } else if(p->cpu_ticks_total < 100) {
+    cprintf("0.0%d",p->cpu_ticks_total );
+  } else if(p->cpu_ticks_total < 1000) {
+    cprintf("0.%d",p->cpu_ticks_total );
+  } else{
+    cprintf("%d.%d",p->cpu_ticks_total/1000,p->cpu_ticks_total%1000);
+  }
+
+  cprintf("\t%s\t%d\t",
+    states[p->state],
+    p->sz
+  );
+return;
+
 }
 #elif defined(CS333_P1)
 void
@@ -636,6 +677,48 @@ procdump(void)
   cprintf("$ ");  // simulate shell prompt
 #endif // CS333_P1
 }
+
+
+#ifdef CS333_P2
+// Helper function to access ptable for sys_getprocs
+int
+cpdProc(int max, struct uproc* up)
+{
+  int cnt = 0;
+  struct proc* pt;
+  acquire(&ptable.lock);
+
+  for(pt = ptable.proc; pt < &ptable.proc[NPROC]; pt++){
+    if (cnt == max)
+      break;
+    if (pt->state == UNUSED || pt->state == EMBRYO){
+      continue;
+    }else if(pt->state == SLEEPING || pt->state == RUNNABLE || pt->state == RUNNING || pt->state == ZOMBIE) {
+      up[cnt].pid = pt->pid;
+      up[cnt].uid = pt->uid;
+      up[cnt].gid = pt->gid;
+
+      // Handle init PPID
+      if (pt->pid == 1){
+        up[cnt].ppid = pt->pid;
+      }else{
+        up[cnt].ppid = pt->parent->pid;
+      }
+
+      up[cnt].elapsed_ticks = ticks - pt->start_ticks;
+      up[cnt].CPU_total_ticks = pt->cpu_ticks_total;
+      safestrcpy(up[cnt].state, states[pt->state], sizeof(up[cnt].state));
+      up[cnt].size = pt->sz;
+      safestrcpy(up[cnt].name, (char*)pt->name, sizeof(pt->name));
+  
+      cnt++;
+    }
+  }
+
+  release(&ptable.lock);
+  return cnt;
+}
+#endif // CS333_P2
 
 #if defined(CS333_P3)
 // list management helper functions
