@@ -36,6 +36,7 @@ uint getppid(void); // PID of the parent process
 
 int setuid(uint); // Set uid
 int setgid(uint); // set gid
+int  getprocs(uint, struct uproc*);
 #endif
 
 // ulib.c
