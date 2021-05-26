@@ -18,7 +18,7 @@ endif
 
 ifeq ($(CS333_PROJECT), 2)
 CS333_CFLAGS += -DCS333_P1 -DUSE_BUILTINS -DCS333_P2
-CS333_UPROGS += #_date _time _ps
+CS333_UPROGS +=  _ps _time _date
 CS333_TPROGS += _testsetuid  _testuidgid _p2-test
 endif
 
