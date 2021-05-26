@@ -810,7 +810,7 @@ index 452e9da..04f98ee 100644
 
 # modifying console 
 
-```
+```diff
 diff --git a/xv6-pdx/proc.c b/xv6-pdx/proc.c
 index 452e9da..04f98ee 100644
 --- a/xv6-pdx/proc.c
