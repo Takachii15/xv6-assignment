@@ -85,6 +85,8 @@ halt.c
 uptime.c
 date.h
 date.c
+ps.c
+time.c
 uproc.h
 testuidgid.c
 testuidgid.txt
