@@ -1,4 +1,4 @@
-# Personal Assignment 1 Operating System Class
+# Personal Assignment 2 Operating System Class
 
 - Name : Muhammad Daffa Haryadi Putra 
 - NIM  : 1313619034
